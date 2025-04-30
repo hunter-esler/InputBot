@@ -155,11 +155,6 @@ pub fn handle_input_events(auto_stop: bool) {
 }
 
 unsafe extern "system" fn keybd_proc(code: c_int, w_param: WPARAM, l_param: LPARAM) -> LRESULT {
-    println!(
-        "{:?} {:?}",
-        u64::from((*(l_param.0 as *const KBDLLHOOKSTRUCT)).vkCode,),
-        w_param.0 as u32
-    );
     if KEYBD_BINDS.lock().unwrap().is_empty() {
         unset_hook(&KEYBD_HHOOK);
     } else if w_param.0 as u32 == WM_KEYDOWN || w_param.0 as u32 == WM_SYSKEYDOWN {
