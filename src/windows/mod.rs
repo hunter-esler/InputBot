@@ -13,9 +13,9 @@ use windows::Win32::{
             GetAsyncKeyState, GetKeyState, MapVirtualKeyW, SendInput, INPUT, INPUT_0,
             INPUT_KEYBOARD, INPUT_MOUSE, KEYBDINPUT, KEYBD_EVENT_FLAGS, KEYEVENTF_KEYUP,
             KEYEVENTF_SCANCODE, MAP_VIRTUAL_KEY_TYPE, MOUSEEVENTF_HWHEEL, MOUSEEVENTF_LEFTDOWN,
-            MOUSEEVENTF_LEFTUP, MOUSEEVENTF_MIDDLEDOWN, MOUSEEVENTF_MIDDLEUP, MOUSEEVENTF_XUP,
-            MOUSEEVENTF_RIGHTDOWN, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_XDOWN,  MOUSEEVENTF_WHEEL, MOUSEINPUT,
-            MOUSE_EVENT_FLAGS, VIRTUAL_KEY,
+            MOUSEEVENTF_LEFTUP, MOUSEEVENTF_MIDDLEDOWN, MOUSEEVENTF_MIDDLEUP,
+            MOUSEEVENTF_RIGHTDOWN, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_WHEEL, MOUSEEVENTF_XDOWN,
+            MOUSEEVENTF_XUP, MOUSEINPUT, MOUSE_EVENT_FLAGS, VIRTUAL_KEY,
         },
         WindowsAndMessaging::{
             CallNextHookEx, GetCursorPos, GetMessageW, KillTimer, SetCursorPos, SetTimer,
@@ -155,6 +155,11 @@ pub fn handle_input_events(auto_stop: bool) {
 }
 
 unsafe extern "system" fn keybd_proc(code: c_int, w_param: WPARAM, l_param: LPARAM) -> LRESULT {
+    println!(
+        "{:?} {:?}",
+        u64::from((*(l_param.0 as *const KBDLLHOOKSTRUCT)).vkCode,),
+        w_param.0 as u32
+    );
     if KEYBD_BINDS.lock().unwrap().is_empty() {
         unset_hook(&KEYBD_HHOOK);
     } else if w_param.0 as u32 == WM_KEYDOWN || w_param.0 as u32 == WM_SYSKEYDOWN {

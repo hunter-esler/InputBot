@@ -70,6 +70,11 @@ impl From<KeybdKey> for u64 {
             Numpad7Key => 0x67,
             Numpad8Key => 0x68,
             Numpad9Key => 0x69,
+            MultiplyKey => 0x6A,
+            AddKey => 0x6B,
+            SubtractKey => 0x6D,
+            DecimalKey => 0x6E,
+            DivideKey => 0x6F,
             F1Key => 0x70,
             F2Key => 0x71,
             F3Key => 0x72,
@@ -124,7 +129,10 @@ impl From<KeybdKey> for u64 {
             LBracketKey => 0xDB,
             RBracketKey => 0xDD,
             EqualKey => 0xBB,
-            OtherKey(code) => code,
+            OtherKey(code) => {
+                println!("{code:?}");
+                return code;
+            }
         }
     }
 }
@@ -196,6 +204,11 @@ impl From<u64> for KeybdKey {
             0x67 => Numpad7Key,
             0x68 => Numpad8Key,
             0x69 => Numpad9Key,
+            0x6A => MultiplyKey,
+            0x6B => AddKey,
+            0x6D => SubtractKey,
+            0x6E => DecimalKey,
+            0x6F => DivideKey,
             0x70 => F1Key,
             0x71 => F2Key,
             0x72 => F3Key,
