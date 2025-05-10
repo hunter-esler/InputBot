@@ -8,6 +8,12 @@ impl From<KeybdKey> for u64 {
     // https://github.com/AltF02/x11-rs/blob/master/src/keysym.rs
     fn from(key: KeybdKey) -> u64 {
         match key {
+            MultiplyKey => 0xFFAA,
+            AddKey => 0xFFAB,
+            SubtractKey => 0xFFAD,
+            DecimalKey => 0xFFAE,
+            DivideKey => 0xFFAF,
+
             BackspaceKey => 0xFF08,
             TabKey => 0xFF09,
             EnterKey => 0xFF8D,
@@ -279,7 +285,7 @@ impl From<MouseButton> for u32 {
             X1Button => 4,
             X2Button => 5,
             OtherButton(keycode) => keycode,
-            _ => unimplemented!()
+            _ => unimplemented!(),
         }
     }
 }
