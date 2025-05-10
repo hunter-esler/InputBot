@@ -246,7 +246,6 @@ pub fn handle_input_events(auto_stop: bool) {
         libinput_context.dispatch().unwrap();
 
         for event in libinput_context.by_ref() {
-            println!("herro?");
             handle_input_event(event);
         }
 
