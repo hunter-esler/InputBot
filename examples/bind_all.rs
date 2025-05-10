@@ -12,6 +12,8 @@ fn main() {
         };
     });
 
+    //windows only
+    #[cfg(target_os = "windows")]
     // Bind all release keys to a common callback event (Windows only).
     KeybdKey::bind_all_release(|event| {
         match inputbot::from_keybd_key(event) {
@@ -25,6 +27,8 @@ fn main() {
         println!("{:?}", event);
     });
 
+    //windows only
+    #[cfg(target_os = "windows")]
     // Bind all release mouse buttons to a common callback event (Windows only).
     MouseButton::bind_all_release(|event| {
         println!("released {:?}", event);
