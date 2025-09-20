@@ -222,7 +222,14 @@ pub enum KeybdKey {
     RBracketKey,
     EqualKey,
 
-    #[strum(disabled)]
+    NumpadDecimalKey,
+    NumpadDivideKey,
+    NumpadMultiplyKey,
+    NumpadSubtractKey,
+    NumpadAddKey,
+    NumpadEnterKey,
+
+    //#[strum(disabled)]
     OtherKey(u64),
 }
 
@@ -236,7 +243,7 @@ pub enum MouseButton {
     X2Button,
     MousewheelUp,
     MousewheelDown,
-    #[strum(disabled)]
+    //#[strum(disabled)]
     OtherButton(u32),
 }
 
@@ -327,6 +334,13 @@ impl std::fmt::Display for KeybdKey {
             f,
             "{}",
             match self {
+                KeybdKey::NumpadAddKey => "NumpadAdd",
+                KeybdKey::NumpadSubtractKey => "NumpadSubtract",
+                KeybdKey::NumpadMultiplyKey => "NumpadMultiply",
+                KeybdKey::NumpadDivideKey => "NumpadDivide",
+                KeybdKey::NumpadDecimalKey => "NumpadDecimal",
+                KeybdKey::NumpadEnterKey => "NumpadEnter",
+
                 KeybdKey::BackspaceKey => "Backspace",
                 KeybdKey::TabKey => "Tab",
                 KeybdKey::EnterKey => "Enter",

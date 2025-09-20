@@ -1,10 +1,8 @@
 use crate::{common::*, linux::inputs::*, public::*};
 use input::{
     event::{
-        keyboard::{
-            KeyState, {KeyboardEvent, KeyboardEventTrait},
-        },
-        pointer::{ButtonState, PointerEvent::*},
+        keyboard::{KeyState, KeyboardEvent, KeyboardEventTrait},
+        pointer::{ButtonState, PointerEvent::*, PointerScrollEvent},
         Event::{self, *},
     },
     Libinput, LibinputInterface,
@@ -258,6 +256,13 @@ fn handle_input_event(event: Event) {
         Keyboard(KeyboardEvent::Key(keyboard_key_event)) => {
             let key = keyboard_key_event.key();
             if let Some(keybd_key) = scan_code_to_key(key) {
+                match &keybd_key {
+                    KeybdKey::OtherKey(key) => {
+                        println!("Unknown key: {}", key);
+                    }
+                    _ => (),
+                }
+                //println!("{}", &key);
                 if keyboard_key_event.key_state() == KeyState::Pressed {
                     KEY_STATES.lock().unwrap().insert(keybd_key, true);
 
@@ -268,6 +273,8 @@ fn handle_input_event(event: Event) {
                 } else {
                     KEY_STATES.lock().unwrap().insert(keybd_key, false);
                 }
+            } else {
+                println!("Unknown key: {}", key);
             }
         }
         Pointer(Button(button_event)) => {
@@ -278,7 +285,10 @@ fn handle_input_event(event: Event) {
                 274 => Some(MouseButton::MiddleButton),
                 275 => Some(MouseButton::X1Button),
                 276 => Some(MouseButton::X2Button),
-                _ => None,
+                _ => {
+                    println!("Unknown mouse button: {}", button);
+                    None
+                }
             } {
                 if button_event.button_state() == ButtonState::Pressed {
                     BUTTON_STATES.lock().unwrap().insert(mouse_button, true);
@@ -290,6 +300,27 @@ fn handle_input_event(event: Event) {
                     BUTTON_STATES.lock().unwrap().insert(mouse_button, false);
                 }
             }
+        }
+        Pointer(ScrollWheel(scroll_event)) => {
+            let vert = scroll_event.scroll_value(input::event::pointer::Axis::Vertical);
+            //println!("vert: {}", vert);
+            let mouse_button;
+            if vert < 0.0 {
+                // Wheel up
+                mouse_button = MouseButton::MousewheelUp;
+                BUTTON_STATES.lock().unwrap().insert(mouse_button, true);
+            } else if vert > 0.0 {
+                // Wheel down
+                mouse_button = MouseButton::MousewheelDown;
+                BUTTON_STATES.lock().unwrap().insert(mouse_button, true);
+            } else {
+                return;
+            }
+
+            if let Some(Bind::Normal(cb)) = MOUSE_BINDS.lock().unwrap().get(&mouse_button) {
+                let cb = Arc::clone(cb);
+                spawn(move || cb());
+            };
         }
         _ => {}
     }
