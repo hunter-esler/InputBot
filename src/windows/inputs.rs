@@ -74,6 +74,7 @@ impl From<KeybdKey> for u64 {
             AddKey => 0x6B,
             SubtractKey => 0x6D,
             DecimalKey => 0x6E,
+            NumpadDecimalKey => 0x6E,
             DivideKey => 0x6F,
             F1Key => 0x70,
             F2Key => 0x71,
@@ -133,6 +134,7 @@ impl From<KeybdKey> for u64 {
                 println!("{code:?}");
                 return code;
             }
+            _ => todo!(),
         }
     }
 }
